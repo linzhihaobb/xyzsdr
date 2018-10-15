@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>后台管理</title>
+    <link rel="stylesheet" type="text/css" href="/css/lib.css">
+    <link rel="stylesheet" type="text/css" href="/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="row">
+            <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xs-offset-2">
+                <div class="page-header">
+                    <h2>后台管理</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-2 col-xs-offset-2">
+                <div class="list-group">
+                    <router-link to="/home" class="list-group-item">首页轮播图</router-link>
+                    <router-link to="/product" class="list-group-item">产品管理</router-link>
+                    <a href="/logout" class="list-group-item">退出并返回首页</a>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="panel">
+                    <div class="panel-body">
+                        <!-- 路由的出口 -->
+                        <router-view></router-view>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <template id="home">
+        <div>
+            <div id="myCarousel" class="carousel slide">
+                <!-- 轮播（Carousel）指标 -->
+                <ol class="carousel-indicators">
+                    {{each list slideshow index}}
+                    {{if index==0}}
+                    <li data-target="#myCarousel" data-slide-to="{{index}}" class="active"></li>
+                    {{else}}
+                    <li data-target="#myCarousel" data-slide-to="{{index}}"></li>
+                    {{/if}}
+                    {{/each}}
+
+                </ol>
+                <!-- 轮播（Carousel）项目 -->
+                <div class="carousel-inner">
+                    {{each list slideshow index}}
+                    {{if index==0}}
+                    <div class="item active">
+                        <img src="/upload/slideshow/{{slideshow.link}}" alt="First slide" style="width: 100%;">
+                    </div>
+                    {{else}}
+                    <div class="item">
+                        <img src="/upload/slideshow/{{slideshow.link}}" alt="Second slide" style="width: 100%;">
+                    </div>
+                    {{/if}}
+                    {{/each}}
+                </div>
+                <!-- 轮播（Carousel）导航 -->
+                <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+
+            <div>
+                <ul class="nav nav-tabs">
+                    <li>
+                        <!-- :to 表示使用name是news的路由 -->
+                        <!-- 当要传入一个对象的时候，使用冒号添加to属性 -->
+                        <router-link to="/home/add">添加图片</router-link>
+                    </li>
+                    <li>
+                        <!-- 直接指定路由地址的时候，使用to即可 -->
+                        <!-- 这里的to="/home/sport" 仍然是一个路由 -->
+                        <router-link to="/home/delete">删除图片</router-link>
+                    </li>
+                </ul>
+                <!-- 路由的出口 -->
+                <router-view></router-view>
+            </div>
+        </div>
+    </template>
+
+    <template id="add">
+        <div>
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <td>
+                        <form action="/add" method="post" enctype="multipart/form-data">
+                            <input type="file" name="slideshow" id="slideshow ">
+                            <button id="btn">添加</button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+    </template>
+    </div>
+    <template id="delete">
+        <div>
+            <table class="table table-striped table-bordered">
+                {{each list slideshow index}}
+                <tr>
+                    <td>{{index+1}}</td>
+                    <td><img src="/upload/slideshow/{{slideshow.link}}" alt="" style="width:150px;height:50px"></td>
+                    <td>
+                        <button onclick="removeSlideshow('{{slideshow.id}}')">删除</button>
+                    </td>
+                </tr>
+                {{/each}}
+            </table>
+        </div>
+    </template>
+
+    <template id="product">
+        <div>
+            <a class="btn btn-primary form-control" href="/add.html" style="margin-bottom:10px">添加产品</a>
+            <a class="btn btn-default" href="/list/1?type=all" style="margin-bottom:10px">全部产品</a>
+            <a class="btn btn-info" href="/list/1?type=yjcp" style="margin-bottom:10px">硬件产品</a>
+            <a class="btn btn-danger" href="/list/1?type=yyrj" style="margin-bottom:10px">应用软件</a>
+            <a class="btn btn-success" href="/list/1?type=zbcp" style="margin-bottom:10px">周边产品</a>
+            <table class="table table-striped table-bordered" id="insert">
+                <tr>
+                    <th>ID</th>
+                    <th>产品名</th>
+                    <th>产品类型</th>
+                    <th>产品简介</th>
+                    <th>操作</th>
+                </tr>
+                {{each product productlist index}}
+                <tr>
+                    <td>{{index+1}}</td>
+                    <td>{{productlist.title}}</td>
+                    <td>{{productlist.types}}</td>
+                    <td>{{productlist.remark}}</td>
+                    <td>
+                        <button onclick="location.href='/edit/{{productlist.id}}'">修改</button>
+                        <button onclick="removeProduct('{{productlist.id}}')">删除</button>
+                    </td>
+                </tr>
+                {{/each}}
+            </table>
+            <ul class="pagination">
+                <li>
+                    <a href="/list/1?type=all">首页</a>
+                </li>
+                {{if page == 1}}
+                <li class="disabled">
+                    <a>上一页</a>
+                </li>
+                {{else}}
+                <li>
+                    <a href="/list/{{page-1}}?type=all">上一页</a>
+                </li>
+                {{/if}} {{each pages}}
+                <li class="{{$value==page?'active':''}}">
+                    <a href="/list/{{$value}}?type=all">{{$value}}</a>
+                </li>
+                {{/each}} {{if page==pageCount}}
+                <li class="disabled">
+                    <a href="#">下一页</a>
+                </li>
+                {{else}}
+                <li>
+                    <a href="/list/{{page+1}}?type=all">下一页</a>
+                </li>
+                {{/if}}
+                <li>
+                    <a href="/list/{{pageCount}}?type=all">尾页</a>
+                </li>
+            </ul>
+        </div>
+    </template>
+
+    <script src="https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/vue.min.js"></script>
+    <script src="/js/vue-router.js"></script>
+    <script src="/js/router.js"></script>
+    <script src="/js/home.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            router: route,
+        })
+    </script>
+</body>
+
+</html>

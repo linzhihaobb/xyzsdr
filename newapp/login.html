@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>后台登录界面</title>
+<link rel="stylesheet" href="/css/loginstyle.css">
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="wrap">
+        <div class="container">
+            <h1>Welcome</h1>
+            <form action="/login" method="post">
+                <input type="text" name="username" placeholder="请输入用户名" required/>
+                <input type="password" name="password" placeholder="请输入密码" required/>
+                <input type="submit" value="登录"/>
+            </form>
+        </div>
+        <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+
+    <div class="modal fade bs-example-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog  modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">用户提示</h4>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/jquery-1.11.3.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script>
+    $('form').submit(function(e) {
+    // 第一步，阻止表单默认行为
+    e.preventDefault();
+    // 第二步，收集一下表单的所有数据
+    var data = $(this).serialize();
+    // 第三步，开始发送 ajax
+    $.post('/login',data,function(res) {
+        // 如果登陆成功，那么就跳到首页
+        if(res.code == 'success') {
+            location.href = '/home'
+        }else {
+            // 就返回服务器端的失败提示信息
+            $('.modal-body').text(res.message);
+            $('.modal').modal('show');
+        }
+    })
+})
+    
+    </script>
+</body>
+</html>
